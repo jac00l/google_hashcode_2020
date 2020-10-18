@@ -1,0 +1,91 @@
+### INPUT
+
+[int] books_number
+Total number of books in all libraries.
+For instance: 1000
+
+[int] libraries_number
+Number of libraries.
+For instance: 500
+
+[int] days_number
+Number of days. Time period available for signing and scanning.
+For instance: 80
+
+[tuple] books
+List of all books' scores.
+For instance: (1, 2, 3)
+
+    [int] books[i]
+        Score of a book of ID 'i'. Example: If books[0] equals 10, then score of book of ID 0 equals 10.
+        For instance: 20
+
+[tuple] libraries
+List of all libraries. Length of this tuple equals libraries_number
+For instance (((3, 2, 1), (2, 17, 3)), ..., ...)
+
+    [tuple] libraries[i]
+    Tuple of data and books available in library of ID 'i'.
+    For instance ((3, 2, 1), (2, 17, 3))
+
+        [tuple] libraries[i][0]
+        Tuple of data about library of ID 'i'. Size of this tuple is fixed to 3.
+        For instance: (3, 2, 1)
+
+            [int] libraries[i][0][0]
+            Number of books available in library of ID 'i'.
+            For instance: 3
+
+            [int] libraries[i][0][1]
+            Number of days library of ID 'i' requires to sign up.
+            For instance: 2
+
+            [int] libraries[i][0][2]
+            Number of books that may be shipped to scan center per day.
+            For instance: 1
+        
+        [tuple] libraries[i][1]
+        Tuple containg IDs of books available in the library of ID 'i'
+        For instance: (2, 17, 3)
+
+### RUNNING SCRIPT
+
+[list] population
+List containg many solutions and their values. For more specific info about solutions see bellow.
+For instance: [(20, solution2), (30, solution1)]
+
+    [int] population[0]
+    Value of a single, particular and complete solution.
+    For instance: 90
+
+    [tuple] population[1]
+    Solution. For more specific info about solutions see bellow.
+
+### OUTPUT
+
+[tuple] solution
+Tuple containg one, particular, solution of a problem. Length of this tuple is fixed to 2.
+For instance: (2, (1, 3, (5, 2, 3)), (0, 5, (0, 1, 2, 3, 4)))
+
+    [tuple] solution[i][0]
+    Number of libraries that will be signed up for scanning (in solution of ID 'i').
+    For instance: 2
+
+    [tuple] solution[i][j] (constraint: 1 >= j >= solution[i][0])
+    Information about library which will be signed up as a j-th one.
+    For instance: (1, 3, (5, 2, 3))
+
+        [int] solution[i][j][0]
+        ID of a library which will be signed up as a j-th one.
+        For instance: 1
+
+        [int] solution[i][j][1]
+        Amount of books which will be signed up for scanning.
+        For instance: 3
+
+        [tuple] solution[i][j][2]
+        IDs of books that will be send for scanning from library of ID solution[i][j][0], id order
+        For instance: (5, 2, 3)
+
+
+
