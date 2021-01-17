@@ -2,7 +2,6 @@ from time import time
 import random
 import statistics
 
-
 epochs_duration = []
 epochs_duration.append(time())
 
@@ -13,11 +12,11 @@ def library_heuristic(library, books_scores):
     scores = [books_scores[x] for x in books]
     total_score = sum(scores)
     variance = statistics.variance(scores)
-    return total_score / (max(0.01, variance) * library[0][1])
-
+    return total_score / (max(0.01, variance) * library[0][1]) ** 1/2
 
 def evaluate_solution(solution, books_scores):
     books_scanned = set()
+    points = 0
     number_of_libraries = solution[0]
     for i in range(1, number_of_libraries+1):
         number_of_books = solution[i][1]
@@ -40,9 +39,8 @@ def get_complete_solution(solution_indices, libraries, days_number, books_scores
         books_per_day = libraries[i][0][2]
         available_books = list(libraries[i][1])
         particular_solution = [i, 0, []]
-        available_books.sort(key = lambda x: books_scores[x], reverse = True)
         for x in available_books:
-            if len(particular_solution[2]) > time_pointer * books_per_day:
+            if len(particular_solution[2]) >= time_pointer * books_per_day:
                 break
             if x not in used_books:
                 particular_solution[2].append(x)
@@ -103,8 +101,7 @@ def do_mutations(population, libraries, days_number, books_scores):
         mutated_solutions.append(mutate(solution, libraries, days_number, books_scores))
     return mutated_solutions
 
-def get_children(parents, libraries, days_number, books_scores):
-    parent_a, parent_b = parents[0], parents[1]
+def get_children(parent_a, parent_b, libraries, days_number, books_scores):
     parent_a_indices = [parent_a[i][0] for i in range(1, len(parent_a))]
     parent_b_indices = [parent_b[i][0] for i in range(1, len(parent_b))]
     split_point = random.randint(0, min(len(parent_a_indices), len(parent_b_indices)) - 1)
@@ -126,7 +123,7 @@ def get_offspring(population, libraries, days_number, books_scores):
     offspring = []
     mating_pool = [evaluate_solution(population[i], books_scores) for i in range(len(population))] 
     for _ in range(len(population), 2):
-        offspring.append(get_children(random.choices(population, weights = mating_pool, k = 2), libraries, days_number, books_scores))
+        offspring.append(get_children(random.choices(population, weights = mating_pool, k = 2)), libraries, days_number, books_scores)
     return tuple(offspring)
 
 max_duration = 300
@@ -136,9 +133,8 @@ books_number, libraries_number, days_number = [int(x) for x in input().split()]
 books_scores = tuple([int(x) for x in input().split()])
 libraries = [None] * libraries_number
 for i in range(libraries_number):
-    libraries[i] = (tuple([int(x) for x in input().split()]), tuple([int(x) for x in input().split()]))
+    libraries[i] = tuple([int(x) for x in input().split()]), tuple(sorted([int(x) for x in input().split()], key = lambda x: books_scores[x], reverse = True))
 libraries = tuple(libraries)
-
 libraries_heuristics = tuple([library_heuristic(library, books_scores) for library in libraries])
 
 population_size, population = get_initial_population(population_size - 1, libraries_number, days_number, libraries, libraries_heuristics, books_scores, epochs_duration[0], max_duration)
@@ -157,7 +153,6 @@ while epochs_duration[0] + max_duration - 5 >= time() + (epochs_duration[-1] - e
     epochs_duration.append(time())
 
 print(population[0][0])
-
 for i in range(1, len(population[0])):
     print(population[0][i][0], population[0][i][1], end = " ")
     print(" ".join([str(x) for x in population[0][i][2]]))
