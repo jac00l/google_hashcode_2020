@@ -12,7 +12,7 @@ def library_heuristic(library, books_scores):
     scores = [books_scores[x] for x in books]
     total_score = sum(scores)
     variance = statistics.variance(scores)
-    return total_score / (max(0.01, variance) * library[0][1]) ** 1/2
+    return (total_score / (max(0.01, variance) * library[0][1])) ** (1 / 2)
 
 def evaluate_solution(solution, books_scores):
     books_scanned = set()
@@ -98,7 +98,8 @@ def mutate(solution, libraries, days_number, books_scores):
 def do_mutations(population, libraries, days_number, books_scores):
     mutated_solutions = []
     for solution in population:
-        mutated_solutions.append(mutate(solution, libraries, days_number, books_scores))
+        if random.random() < 0.25:
+            mutated_solutions.append(mutate(solution, libraries, days_number, books_scores))
     return mutated_solutions
 
 def get_children(parent_a, parent_b, libraries, days_number, books_scores):
